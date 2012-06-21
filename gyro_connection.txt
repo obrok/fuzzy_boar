@@ -1,0 +1,7 @@
+zlutowalismy zworke CLK(gyro)
+VDD(gyro) z VIO(gyro)
+SCL z SCL(gyro)
+SDA z SDA(gyro)
+3.3v z VDD(gyro)
+GND z GND(gyro)
+GND z FSYNC(gyro)
