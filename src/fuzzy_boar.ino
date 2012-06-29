@@ -1,7 +1,8 @@
 #include "Wire.h"
 #include "Servo.h"
-#include "../lib/I2Cdev.h"
-#include "../lib/MPU6050_6Axis_MotionApps20.h"
+#include "MPU6050_6Axis_MotionApps20.h"
+#include "I2Cdev.h"
+#include "MPU6050.h"
 
 MPU6050 mpu;
 
