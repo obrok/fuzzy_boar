@@ -1,11 +1,10 @@
 #include "Wire.h"
 #include "Servo.h"
-#include "I2Cdev.h"
-#include "MPU6050_6Axis_MotionApps20.h"
+#include "../lib/I2Cdev.h"
+#include "../lib/MPU6050_6Axis_MotionApps20.h"
 
 MPU6050 mpu;
 
-#define OUTPUT_READABLE_YAWPITCHROLL
 #define LEFT_ENGINE_PIN 3
 #define RIGHT_ENGINE_PIN 4
 
@@ -29,11 +28,6 @@ VectorInt16 aaWorld;    // [x, y, z]            world-frame accel sensor measure
 VectorFloat gravity;    // [x, y, z]            gravity vector
 float euler[3];         // [psi, theta, phi]    Euler angle container
 float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
-
-// packet structure for InvenSense teapot demo
-uint8_t teapotPacket[14] = { '$', 0x02, 0,0, 0,0, 0,0, 0,0, 0x00, 0x00, '\r', '\n' };
-
-
 
 
 volatile bool mpuInterrupt = false;     // indicates whether MPU interrupt pin has gone high
