@@ -1,7 +1,7 @@
 require "serialport"
 
-port_str = "/dev/tty.usbmodemfa131"
-baud_rate = 9600
+port_str = "/dev/tty.usbmodemfd121"
+baud_rate = 115200
 data_bits = 8
 stop_bits = 1
 parity = SerialPort::NONE
