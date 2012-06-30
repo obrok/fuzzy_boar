@@ -10,7 +10,7 @@ FuzzyCom::FuzzyCom() {
 	setMessage("No messages yet");
 }
 
-int FuzzyCom::read() {
+void FuzzyCom::read() {
 	if (currentPos == 0) {
 		messageReceived = false;
 		clearBuffer();

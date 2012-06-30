@@ -208,9 +208,6 @@ void loop() {
     }
     iter += 1;
 
-    // blink LED to indicate activity
-    blinkState = !blinkState;
-    digitalWrite(LED_PIN, blinkState);
   }
   delay(20);
 }

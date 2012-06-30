@@ -4,7 +4,7 @@
 class FuzzyCom {
     public:
 		FuzzyCom();
-		int read();
+		void read();
 		char *message();
 		bool hasMessage();
 		int get(int var);
