@@ -3,10 +3,18 @@ fuzzy_boar
 
 Arduino software to control a quadcopter
 
-building
+Setup
+=====
+
+Install `ino` for CLI arduino
+
+`$ make setup`
+
+Building
 ========
 
-Install git@github.com:BinaryMuse/ino.git
+`$ make build`
 
-make build
-make upload
+Running
+=======
+`$ make upload`
