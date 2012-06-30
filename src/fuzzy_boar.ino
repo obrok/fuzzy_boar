@@ -1,16 +1,15 @@
 #include "Wire.h"
 #include "Servo.h"
 #include "FuzzyCom.h"
+#include "FuzzyEngine.h"
 #include "MPU6050_6Axis_MotionApps20.h"
 #include "I2Cdev.h"
 #include "MPU6050.h"
 
 MPU6050 mpu;
 
-#define LEFT_ENGINE_PIN 3
-#define RIGHT_ENGINE_PIN 4
+#define LED_PIN 13
 
-#define LED_PIN 13 // (Arduino is 13, Teensy is 11, Teensy++ is 6)
 bool blinkState = false;
 
 // MPU control/status vars
@@ -36,39 +35,21 @@ void dmpDataReady() {
   mpuInterrupt = true;
 }
 
-Servo leftEngine;
-Servo rightEngine;
+FuzzyCom com;
+FuzzyEngine engine(3, 4, 5, 6);
 
-void calibrateEngines() {
-  leftEngine.attach(LEFT_ENGINE_PIN);
-  rightEngine.attach(RIGHT_ENGINE_PIN);
+void setup() {
+  Serial.begin(115200);
+  com.set(0, 150);
+  com.set(1, 995);
+  engine.setup(1200, 1800);
 
-  Serial.println(F("\nSend anything to start setup"));
+  return;
+  Wire.begin();
+
   while (Serial.available() && Serial.read()); // empty buffer
   while (!Serial.available());                 // wait for data
   while (Serial.available() && Serial.read()); // empty buffer again
-
-  leftEngine.writeMicroseconds(1800);
-  rightEngine.writeMicroseconds(1800);
-
-  delay(5000);
-
-  leftEngine.writeMicroseconds(1200);
-  rightEngine.writeMicroseconds(1200);
-
-  delay(2000);
-}
-
-FuzzyCom com;
-
-void setup() {
-  com.set(0, 150);
-  com.set(1, 995);
-
-  Serial.begin(115200);
-  return;
-  calibrateEngines();
-  Wire.begin();
 
   // NOTE: 8MHz or slower host processors, like the Teensy @ 3.3v or Ardunio
   // Pro Mini running at 3.3v, cannot handle this baud rate reliably due to
@@ -187,8 +168,8 @@ void loop() {
     double left = base + diff;
     double right = base - diff;
 
-    leftEngine.writeMicroseconds((int)left);
-    rightEngine.writeMicroseconds((int)right);
+    engine.setLeft((int)left);
+    engine.setRight((int)left);
 
     if (iter % 20 == 0) {
       Serial.println("===");
