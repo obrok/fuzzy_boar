@@ -7,6 +7,9 @@ class FuzzyCom {
 		int read();
 		char *message();
 		bool hasMessage();
+		int get(int var);
+		int set(int var, int val);
+
 	private:
 		bool messageReceived;
 		bool isValidHeader();
@@ -16,6 +19,9 @@ class FuzzyCom {
 		char buffer[255];
 		void clearBuffer();
 		void emptySerial();
+		int variables[64];
+		void parseSet(char **tokens, int size);
+		void parseGet(char **tokens, int size);
 };
 
 #endif
