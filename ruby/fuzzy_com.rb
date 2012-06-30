@@ -14,9 +14,9 @@ end
 
 SerialPort.open(port_str, baud_rate, data_bits, stop_bits, parity) do |sp|
   while true do
-    print "Command: "
+    print "< "
     sp.write message(gets.chomp)
-    print "Output: "
+    print "> "
     puts sp.gets
   end
 end

@@ -59,16 +59,12 @@ void calibrateEngines() {
   delay(2000);
 }
 
-char buffer[255];
-
-int i;
+FuzzyCom com;
 
 void setup() {
-  for (i = 0; i < 255; i++) {
-    buffer[i] = '\0';
-  }
+  com.set(0, 150);
+  com.set(1, 995);
 
-  i = 0;
   Serial.begin(115200);
   return;
   calibrateEngines();
@@ -132,8 +128,7 @@ int iter = 0;
 // ===                    MAIN PROGRAM LOOP                     ===
 // ================================================================
 //
-FuzzyCom com;
-
+//
 void loop() {
   if (Serial.available() > 0) {
     com.read();

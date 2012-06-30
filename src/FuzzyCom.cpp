@@ -119,4 +119,5 @@ int FuzzyCom::get(int var) {
 
 int FuzzyCom::set(int var, int val) {
 	variables[var] = val;
+	return val;
 }
