@@ -1,5 +1,6 @@
 #include "Wire.h"
 #include "Servo.h"
+#include "FuzzyCom.h"
 #include "MPU6050_6Axis_MotionApps20.h"
 #include "I2Cdev.h"
 #include "MPU6050.h"
@@ -30,7 +31,6 @@ VectorFloat gravity;    // [x, y, z]            gravity vector
 float euler[3];         // [psi, theta, phi]    Euler angle container
 float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
 
-
 volatile bool mpuInterrupt = false;     // indicates whether MPU interrupt pin has gone high
 void dmpDataReady() {
   mpuInterrupt = true;
@@ -59,8 +59,18 @@ void calibrateEngines() {
   delay(2000);
 }
 
+char buffer[255];
+
+int i;
+
 void setup() {
+  for (i = 0; i < 255; i++) {
+    buffer[i] = '\0';
+  }
+
+  i = 0;
   Serial.begin(115200);
+  return;
   calibrateEngines();
   Wire.begin();
 
@@ -121,8 +131,17 @@ int iter = 0;
 // ================================================================
 // ===                    MAIN PROGRAM LOOP                     ===
 // ================================================================
+//
+FuzzyCom com;
 
 void loop() {
+  if (Serial.available() > 0) {
+    com.read();
+    if (com.hasMessage()) {
+      Serial.println(com.message());
+    }
+  }
+  return;
   // if programming failed, don't try to do anything
   if (!dmpReady) return;
 
