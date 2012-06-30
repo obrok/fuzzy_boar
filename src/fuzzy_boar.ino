@@ -14,7 +14,7 @@ MPU6050 mpu;
 #define PIN_LEFT_ENGINE 5
 #define PIN_RIGHT_ENGINE 6
 
-bool blinkState = false;
+#define VAR_IDX_K 0
 
 // MPU control/status vars
 bool dmpReady = false;  // set true if DMP init was successful
@@ -44,8 +44,9 @@ FuzzyEngine engine(PIN_FRONT_ENGINE, PIN_BACK_ENGINE, PIN_LEFT_ENGINE, PIN_RIGHT
 
 void setup() {
   Serial.begin(115200);
-  com.set(0, 150);
-  com.set(1, 995);
+  pinMode(PIN_LED, OUTPUT);
+
+  com.set(VAR_IDX_K, 25);
   engine.setup(1200, 1800);
 
   return;
@@ -101,19 +102,8 @@ void setup() {
     Serial.print(devStatus);
     Serial.println(F(")"));
   }
-
-  // configure LED for output
-  pinMode(PIN_LED, OUTPUT);
 }
 
-double k = 0.25;
-int iter = 0;
-
-// ================================================================
-// ===                    MAIN PROGRAM LOOP                     ===
-// ================================================================
-//
-//
 void loop() {
   if (Serial.available() > 0) {
     com.read();
@@ -159,11 +149,7 @@ void loop() {
     mpu.dmpGetGravity(&gravity, &q);
     mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
 
-    if (Serial.available() > 0) {
-      int b = Serial.read();
-      b = map(b, 0, 255, -128, 127);
-      k = b / 128.0;
-    }
+    double k = com.get(VAR_IDX_K) / 100.0;
 
     double angle = ypr[1] * 180/M_PI;
     double diff = k * 100 * angle / abs(angle);
@@ -174,25 +160,6 @@ void loop() {
 
     engine.setLeft((int)left);
     engine.setRight((int)left);
-
-    if (iter % 20 == 0) {
-      Serial.println("===");
-      Serial.println(ypr[0] * 180/M_PI);
-      Serial.println(ypr[1] * 180/M_PI);
-      Serial.println(ypr[2] * 180/M_PI);
-      Serial.println("===");
-
-      Serial.print("K ");
-      Serial.println(k);
-      Serial.print("Angle ");
-      Serial.println(angle);
-      Serial.print("Left ");
-      Serial.println(left);
-      Serial.print("Right ");
-      Serial.println(right);
-    }
-    iter += 1;
-
   }
-  delay(20);
+  delay(25);
 }
