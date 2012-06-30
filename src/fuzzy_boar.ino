@@ -8,7 +8,11 @@
 
 MPU6050 mpu;
 
-#define LED_PIN 13
+#define PIN_LED 13
+#define PIN_FRONT_ENGINE 3
+#define PIN_BACK_ENGINE 4
+#define PIN_LEFT_ENGINE 5
+#define PIN_RIGHT_ENGINE 6
 
 bool blinkState = false;
 
@@ -36,7 +40,7 @@ void dmpDataReady() {
 }
 
 FuzzyCom com;
-FuzzyEngine engine(3, 4, 5, 6);
+FuzzyEngine engine(PIN_FRONT_ENGINE, PIN_BACK_ENGINE, PIN_LEFT_ENGINE, PIN_RIGHT_ENGINE);
 
 void setup() {
   Serial.begin(115200);
@@ -99,7 +103,7 @@ void setup() {
   }
 
   // configure LED for output
-  pinMode(LED_PIN, OUTPUT);
+  pinMode(PIN_LED, OUTPUT);
 }
 
 double k = 0.25;
