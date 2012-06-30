@@ -22,14 +22,40 @@ void FuzzyEngine::setup(int _low, int _high) {
 	delay(2000);
 }
 
+void FuzzyEngine::setFront(int speed) {
+	setSpeed(&front, speed, &frontSpeed);
+}
+
+void FuzzyEngine::setBack(int speed) {
+	setSpeed(&back, speed, &backSpeed);
+}
+
 void FuzzyEngine::setLeft(int speed) {
-	left.writeMicroseconds(constrainSpeed(speed));
+	setSpeed(&left, speed, &leftSpeed);
 }
 
 void FuzzyEngine::setRight(int speed) {
-	right.writeMicroseconds(constrainSpeed(speed));
+	setSpeed(&right, speed, &rightSpeed);
 }
 
-int FuzzyEngine::constrainSpeed(int speed) {
-	constrain(speed, low, high);
+int FuzzyEngine::getFront() {
+	return frontSpeed;
+}
+
+int FuzzyEngine::getBack() {
+	return backSpeed;
+}
+
+int FuzzyEngine::getLeft() {
+	return leftSpeed;
+}
+
+int FuzzyEngine::getRight() {
+	return rightSpeed;
+}
+
+void FuzzyEngine::setSpeed(Servo *engine, int speed, int *speedContainer) {
+	speed = constrain(speed, low, high);
+	speedContainer = &speed;
+	engine -> writeMicroseconds(speed);
 }
