@@ -15,8 +15,10 @@ MPU6050 mpu;
 #define PIN_LEFT_ENGINE 5
 #define PIN_RIGHT_ENGINE 6
 
-#define VAR_IDX_LOG_LEVEL 0
-#define VAR_IDX_K 1
+#define VAR_IDX_SETUP 0
+#define VAR_IDX_LEFT_ENGINE 1
+#define VAR_IDX_RIGHT_ENGINE 2
+#define VAR_IDX_K 3
 
 // MPU control/status vars
 bool dmpReady = false;  // set true if DMP init was successful
@@ -41,6 +43,15 @@ void dmpDataReady() {
   mpuInterrupt = true;
 }
 
+void notify(int times) {
+  for (int i = 0; i < times; i++) {
+    digitalWrite(PIN_LED, HIGH);
+    delay(50);
+    digitalWrite(PIN_LED, LOW);
+    delay(50);
+  }
+}
+
 FuzzyCom com;
 FuzzyEngine engine(PIN_FRONT_ENGINE, PIN_BACK_ENGINE, PIN_LEFT_ENGINE, PIN_RIGHT_ENGINE);
 FuzzyLogger logger;
@@ -49,9 +60,21 @@ void setup() {
   Serial.begin(115200);
   pinMode(PIN_LED, OUTPUT);
 
+  notify(3);
+
+  while (com.get(VAR_IDX_SETUP) == 0) {
+    if (Serial.available() > 0) {
+      com.read();
+      if (com.hasMessage()) {
+        Serial.println(com.getResponse());
+      }
+    }
+  }
+
   com.set(VAR_IDX_K, 25);
-  com.set(VAR_IDX_LOG_LEVEL, 0);
-  // engine.setup(1200, 1800);
+  notify(5);
+
+  engine.setup(1200, 1800);
 
   return;
   Wire.begin();
@@ -125,6 +148,13 @@ void loop() {
       }
     }
   }
+
+  int left = com.get(VAR_IDX_LEFT_ENGINE);
+  engine.setLeft(left / 100.0);
+
+  int right = com.get(VAR_IDX_RIGHT_ENGINE);
+  engine.setRight(right / 100.0);
+
   return;
   // if programming failed, don't try to do anything
   if (!dmpReady) return;

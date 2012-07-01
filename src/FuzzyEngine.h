@@ -37,6 +37,11 @@ class FuzzyEngine {
     int leftSpeed;
     int rightSpeed;
 
+    int frontPin;
+    int backPin;
+    int leftPin;
+    int rightPin;
+
     void setSpeed(Servo *servo, int speed, int *speedContainer);
     void setSpeed(Servo *servo, double speed, int *speedContainer);
 };

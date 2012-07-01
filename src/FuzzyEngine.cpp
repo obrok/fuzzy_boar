@@ -3,23 +3,32 @@
 
 extern FuzzyLogger logger;
 
-FuzzyEngine::FuzzyEngine(int frontPin, int backPin, int leftPin, int rightPin) {
+FuzzyEngine::FuzzyEngine(int _frontPin, int _backPin, int _leftPin, int _rightPin) {
+  frontPin = _frontPin;
+  backPin = _backPin;
+  leftPin = _leftPin;
+  rightPin = _rightPin;
+}
+
+void FuzzyEngine::setup(int _low, int _high) {
   front.attach(frontPin);
   back.attach(backPin);
   left.attach(leftPin);
   right.attach(rightPin);
-}
 
-void FuzzyEngine::setup(int _low, int _high) {
   low = _low;
   high = _high;
+
+  logger.log("engine", "Setting high level to %d", high);
 
   left.writeMicroseconds(high);
   right.writeMicroseconds(high);
   front.writeMicroseconds(high);
   back.writeMicroseconds(high);
 
-  delay(4000);
+  delay(7000);
+
+  logger.log("engine", "Setting low level to %d", low);
 
   left.writeMicroseconds(low);
   right.writeMicroseconds(low);
