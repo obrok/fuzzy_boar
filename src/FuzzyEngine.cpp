@@ -16,11 +16,15 @@ void FuzzyEngine::setup(int _low, int _high) {
 
 	left.writeMicroseconds(high);
 	right.writeMicroseconds(high);
+  front.writeMicroseconds(high);
+  back.writeMicroseconds(high);
 
 	delay(4000);
 
 	left.writeMicroseconds(low);
 	right.writeMicroseconds(low);
+  front.writeMicroseconds(high);
+  back.writeMicroseconds(high);
 
 	delay(2000);
 }
