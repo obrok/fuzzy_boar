@@ -48,10 +48,11 @@ void setup() {
   }
 
   com.set(VAR_IDX_K, 25);
-  notify(5);
+  notify(4);
 
-  engine.setup(1200, 1800);
+  // engine.setup(1200, 1800);
   gyro.setup();
+  notify(5);
 }
 
 void loop() {
@@ -79,5 +80,5 @@ void loop() {
   engine.setRight(right / 100.0);
 
   gyro.update();
-  logger.log("gyro", "yaw %.2f", gyro.getYaw());
+  logger.log("gyro", "yaw %d pitch %d roll %d", (int)(gyro.getYaw() * 180 / M_PI), (int)(gyro.getPitch() * 180 / M_PI), (int)(gyro.getRoll() * 180 / M_PI));
 }
