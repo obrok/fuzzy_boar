@@ -5,14 +5,20 @@ Arduino software to control a quadcopter
 
 Connections
 ===========
-zlutowalismy zworke CLK(gyro)
-3.3v z VIO(gyro)
-SCL z SCL(gyro)
-SDA z SDA(gyro)
-3.3v z VDD(gyro)
-GND z GND(gyro)
-GND z FSYNC(gyro)
-PIN2 (chyba) z INT(gyro)
+
+Solder CLK on MPU6050
+
+```
+Gyro  | Arduino
+------+--------
+VIO   | 3.3v
+SCL   | SCL
+SDA   | SDA
+VDD   | 3.3v
+GND   | GND
+FSYNC | GND
+INT   | PIN2
+```
 
 Setup
 =====
