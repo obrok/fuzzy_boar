@@ -10,6 +10,7 @@ class FuzzyLogger {
     void stop();
     bool isAfterTimeout();
     void log(char *msg);
+    void log(char *topic, char *fmt, ...);
 
   private:
     bool working;

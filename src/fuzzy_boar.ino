@@ -109,7 +109,7 @@ void setup() {
 }
 
 void loop() {
-  logger.log("Starting loop");
+  logger.log("loop", "Starting loop");
   if (logger.isAfterTimeout()) {
     logger.stop();
   }

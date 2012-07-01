@@ -30,6 +30,7 @@ void FuzzyEngine::setup(int _low, int _high) {
 }
 
 void FuzzyEngine::setFront(int speed) {
+  logger.log("engine", "Setting front to %d", speed);
   setSpeed(&front, speed, &frontSpeed);
 }
 
