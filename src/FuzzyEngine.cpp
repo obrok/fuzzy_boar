@@ -1,4 +1,7 @@
 #include "FuzzyEngine.h"
+#include "FuzzyLogger.h"
+
+extern FuzzyLogger logger;
 
 FuzzyEngine::FuzzyEngine(int frontPin, int backPin, int leftPin, int rightPin) {
 	front.attach(frontPin);

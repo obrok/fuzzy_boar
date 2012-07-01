@@ -1,5 +1,8 @@
 #include "FuzzyCom.h"
 #include "Arduino.h"
+#include "FuzzyLogger.h"
+
+extern FuzzyLogger logger;
 
 FuzzyCom::FuzzyCom() {
 	currentPos = 0;
