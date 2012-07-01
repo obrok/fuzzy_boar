@@ -4,16 +4,16 @@
 #include "Arduino.h"
 
 class FuzzyLogger {
-    public:
-		FuzzyLogger();
-		void start(unsigned int secs);
-		void stop();
-		bool isAfterTimeout();
-		void log(char *msg);
+  public:
+    FuzzyLogger();
+    void start(unsigned int secs);
+    void stop();
+    bool isAfterTimeout();
+    void log(char *msg);
 
-	private:
-		bool working;
-		unsigned long timeout;
+  private:
+    bool working;
+    unsigned long timeout;
 };
 
 #endif
