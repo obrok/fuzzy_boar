@@ -7,7 +7,7 @@ FuzzyCom::FuzzyCom() {
 	for (int i = 0; i < 64; i++) {
 		variables[i] = 0;
 	}
-	setMessage("No messages yet");
+	setResponse("No messages yet");
 }
 
 void FuzzyCom::read() {
@@ -25,9 +25,9 @@ void FuzzyCom::read() {
 	}
 }
 
-char *FuzzyCom::message() {
+char *FuzzyCom::getResponse() {
 	if (currentPos == 0) {
-		return buffer;
+		return response;
 	} else {
 		return "Message not parsed yet";
 	}
@@ -45,27 +45,29 @@ void FuzzyCom::parseMessage() {
 	int messageLength;
 
 	if (!isValidHeader()) {
-		setMessage("Header mismatch");
+		setResponse("Header mismatch");
 		return;
 	}
 	messageLength = buffer[4];
 	if (messageLength < 5 || messageLength > 255) {
-		sprintf(buffer, "Message length invalid (%d)", messageLength);
+		sprintf(response, "Message length invalid (%d)", messageLength);
 		return;
 	}
 
 
 	if (strlen(buffer) + 1 != messageLength) {
-		sprintf(buffer, "Message length mismatch (%d != %d)", messageLength, strlen(buffer) + 1);
+		sprintf(response, "Message length mismatch (%d != %d)", messageLength, strlen(buffer) + 1);
 		return;
 	}
 
-	strcpy(buffer, buffer + 5);
+	char bufcopy[255];
+	strcpy(bufcopy, buffer + 5);
+	strcpy(buffer, bufcopy);
 
 	char *tokens[10];
 	char *token;
 	int total = 0;
-	token = strtok(buffer, " ");
+	token = strtok(bufcopy, " ");
 	while (token != NULL) {
 		tokens[total] = token;
 		total++;
@@ -77,7 +79,7 @@ void FuzzyCom::parseMessage() {
 	} else if (strcmp(tokens[0], "get") == 0) {
 		parseGet(tokens, total);
 	} else {
-		setMessage("Command unknown");
+		setResponse("Command unknown");
 	}
 }
 
@@ -86,9 +88,9 @@ void FuzzyCom::parseSet(char **tokens, int size) {
 		int var = atoi(tokens[1]);
 		int val = atoi(tokens[2]);
 		set(var, val);
-		sprintf(buffer, "set %d = %d", var, val);
+		sprintf(response, "set %d = %d", var, val);
 	} else {
-		setMessage("Invalid set command");
+		setResponse("Invalid set command");
 	}
 }
 
@@ -96,14 +98,14 @@ void FuzzyCom::parseGet(char **tokens, int size) {
 	if (size == 2) {
 		int var = atoi(tokens[1]);
 		int val = get(var);
-		sprintf(buffer, "get %d = %d", var, val);
+		sprintf(response, "get %d = %d", var, val);
 	} else {
-		setMessage("Invalid get command");
+		setResponse("Invalid get command");
 	}
 }
 
-void FuzzyCom::setMessage(const char *msg) {
-	strcpy(buffer, msg);
+void FuzzyCom::setResponse(const char *msg) {
+	strcpy(response, msg);
 }
 
 void FuzzyCom::clearBuffer() {
@@ -120,4 +122,8 @@ int FuzzyCom::get(int var) {
 int FuzzyCom::set(int var, int val) {
 	variables[var] = val;
 	return val;
+}
+
+char *FuzzyCom::getRequest() {
+	return buffer;
 }

@@ -2,6 +2,7 @@
 #include "Servo.h"
 #include "FuzzyCom.h"
 #include "FuzzyEngine.h"
+#include "FuzzyLogger.h"
 #include "MPU6050_6Axis_MotionApps20.h"
 #include "I2Cdev.h"
 #include "MPU6050.h"
@@ -14,7 +15,8 @@ MPU6050 mpu;
 #define PIN_LEFT_ENGINE 5
 #define PIN_RIGHT_ENGINE 6
 
-#define VAR_IDX_K 0
+#define VAR_IDX_LOG_LEVEL 0
+#define VAR_IDX_K 1
 
 // MPU control/status vars
 bool dmpReady = false;  // set true if DMP init was successful
@@ -41,13 +43,15 @@ void dmpDataReady() {
 
 FuzzyCom com;
 FuzzyEngine engine(PIN_FRONT_ENGINE, PIN_BACK_ENGINE, PIN_LEFT_ENGINE, PIN_RIGHT_ENGINE);
+FuzzyLogger logger;
 
 void setup() {
   Serial.begin(115200);
   pinMode(PIN_LED, OUTPUT);
 
   com.set(VAR_IDX_K, 25);
-  engine.setup(1200, 1800);
+  com.set(VAR_IDX_LOG_LEVEL, 0);
+  // engine.setup(1200, 1800);
 
   return;
   Wire.begin();
@@ -105,10 +109,20 @@ void setup() {
 }
 
 void loop() {
+  logger.log("Starting loop");
+  if (logger.isAfterTimeout()) {
+    logger.stop();
+  }
+
   if (Serial.available() > 0) {
     com.read();
     if (com.hasMessage()) {
-      Serial.println(com.message());
+      char *request = com.getRequest();
+      if (request[0] == 'l' && request[1] == 'o' && request[2] == 'g') {
+        logger.start(atoi(request + 4));
+      } else {
+        Serial.println(com.getResponse());
+      }
     }
   }
   return;
