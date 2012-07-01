@@ -88,7 +88,6 @@ int FuzzyEngine::getRight() {
 }
 
 void FuzzyEngine::setSpeed(Servo *engine, double speed, int *speedContainer) {
-  logger.log("engine", "set speed %d %d", high, low);
   int intSpeed = speed * (high - low) + low;
   setSpeed(engine, intSpeed, speedContainer);
 }

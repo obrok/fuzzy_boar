@@ -4,6 +4,7 @@
 #include "FuzzyEngine.h"
 #include "FuzzyLogger.h"
 #include "FuzzyGyro.h"
+#include "FuzzyController.h"
 
 #define PIN_LED 13
 #define PIN_FRONT_ENGINE 3
@@ -29,6 +30,7 @@ FuzzyCom com;
 FuzzyEngine engine(PIN_FRONT_ENGINE, PIN_BACK_ENGINE, PIN_LEFT_ENGINE, PIN_RIGHT_ENGINE);
 FuzzyGyro gyro;
 FuzzyLogger logger;
+FuzzyController controller(&engine, &gyro);
 
 void setup() {
   Serial.begin(115200);
@@ -50,7 +52,7 @@ void setup() {
   com.set(VAR_IDX_K, 25);
   notify(4);
 
-  // engine.setup(1200, 1800);
+  engine.setup(1200, 1800);
   gyro.setup();
   notify(5);
 }
@@ -80,5 +82,6 @@ void loop() {
   engine.setRight(right / 100.0);
 
   gyro.update();
+  controller.update();
   logger.log("gyro", "yaw %d pitch %d roll %d", (int)(gyro.getYaw() * 180 / M_PI), (int)(gyro.getPitch() * 180 / M_PI), (int)(gyro.getRoll() * 180 / M_PI));
 }
