@@ -14,6 +14,11 @@ class FuzzyEngine {
     void setLeft(int speed);
     void setRight(int speed);
 
+    void setFront(double speed);
+    void setBack(double speed);
+    void setLeft(double speed);
+    void setRight(double speed);
+
     int getFront();
     int getBack();
     int getLeft();
@@ -24,13 +29,16 @@ class FuzzyEngine {
     Servo back;
     Servo left;
     Servo right;
+
     int low;
     int high;
     int frontSpeed;
     int backSpeed;
     int leftSpeed;
     int rightSpeed;
+
     void setSpeed(Servo *servo, int speed, int *speedContainer);
+    void setSpeed(Servo *servo, double speed, int *speedContainer);
 };
 
 #endif

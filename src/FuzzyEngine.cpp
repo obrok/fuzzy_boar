@@ -46,6 +46,22 @@ void FuzzyEngine::setRight(int speed) {
   setSpeed(&right, speed, &rightSpeed);
 }
 
+void FuzzyEngine::setFront(double speed) {
+  setSpeed(&front, speed, &frontSpeed);
+}
+
+void FuzzyEngine::setBack(double speed) {
+  setSpeed(&back, speed, &backSpeed);
+}
+
+void FuzzyEngine::setLeft(double speed) {
+  setSpeed(&left, speed, &leftSpeed);
+}
+
+void FuzzyEngine::setRight(double speed) {
+  setSpeed(&right, speed, &rightSpeed);
+}
+
 int FuzzyEngine::getFront() {
   return frontSpeed;
 }
@@ -62,7 +78,14 @@ int FuzzyEngine::getRight() {
   return rightSpeed;
 }
 
+void FuzzyEngine::setSpeed(Servo *engine, double speed, int *speedContainer) {
+  logger.log("engine", "set speed %d %d", high, low);
+  int intSpeed = speed * (high - low) + low;
+  setSpeed(engine, intSpeed, speedContainer);
+}
+
 void FuzzyEngine::setSpeed(Servo *engine, int speed, int *speedContainer) {
+  logger.log("engine", "setting speed of %p to %d", engine, speed);
   speed = constrain(speed, low, high);
   speedContainer = &speed;
   engine -> writeMicroseconds(speed);
