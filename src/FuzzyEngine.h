@@ -8,21 +8,26 @@ class FuzzyEngine {
   public:
     FuzzyEngine(int frontPin, int backPin, int leftPin, int rightPin);
     void setup(int low, int high);
+    void stop();
 
-    void setFront(int speed);
-    void setBack(int speed);
-    void setLeft(int speed);
-    void setRight(int speed);
+    int setFront(int speed);
+    int setBack(int speed);
+    int setLeft(int speed);
+    int setRight(int speed);
+    void setAll(int speed);
 
-    void setFront(double speed);
-    void setBack(double speed);
-    void setLeft(double speed);
-    void setRight(double speed);
+    double setFront(double speed);
+    double setBack(double speed);
+    double setLeft(double speed);
+    double setRight(double speed);
 
     int getFront();
     int getBack();
     int getLeft();
     int getRight();
+
+    void changeRight(int i);
+    void changeLeft(int i);
 
   private:
     Servo front;
@@ -42,8 +47,8 @@ class FuzzyEngine {
     int leftPin;
     int rightPin;
 
-    void setSpeed(Servo *servo, int speed, int *speedContainer);
-    void setSpeed(Servo *servo, double speed, int *speedContainer);
+    int setSpeed(Servo *servo, int speed, int *speedContainer);
+    double setSpeed(Servo *servo, double speed, int *speedContainer);
 };
 
 #endif

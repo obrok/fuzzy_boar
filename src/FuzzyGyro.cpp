@@ -8,7 +8,6 @@ void dmpDataReady() {
 }
 
 void FuzzyGyro::setup() {
-  logger.log("gyro", "initializing");
   mpu.initialize();
 
   logger.log("gyro", "Initializing DMP...");
@@ -25,7 +24,7 @@ void FuzzyGyro::setup() {
 
     logger.log("gyro", "Initialization complete");
   } else {
-    logger.log("gyro", "Initialization faild");
+    logger.log("gyro", "Initialization failed");
   }
 }
 
@@ -37,7 +36,7 @@ void FuzzyGyro::update() {
   while (!mpuInterrupt && fifoCount < packetSize) {
   }
 
-  bool mpuInterrupt = false;
+  mpuInterrupt = false;
   uint8_t mpuIntStatus = mpu.getIntStatus();
   uint16_t fifoCount = mpu.getFIFOCount();
 
@@ -46,7 +45,9 @@ void FuzzyGyro::update() {
     mpu.resetFIFO();
   } else if (mpuIntStatus & 0x02) {
     // wait for correct available data length, should be a VERY short wait
-    while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
+    while (fifoCount < packetSize) {
+      fifoCount = mpu.getFIFOCount();
+    }
 
     mpu.getFIFOBytes(fifoBuffer, packetSize);
 

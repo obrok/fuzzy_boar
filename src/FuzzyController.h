@@ -6,18 +6,33 @@
 
 class FuzzyController {
   public:
-    FuzzyController(FuzzyEngine *engine, FuzzyGyro *gyro);
+    FuzzyController();
+    void setup(FuzzyEngine* _engine, FuzzyGyro* _gyro);
     void update();
+    void stop();
+    bool isEven();
+    bool isRightLower();
+    bool hasRightRisen();
+    bool hasLeftRisen();
+    bool hasSwitchedSide();
+    bool changedSideSinceLastKick();
+    void easeKick();
+    void initializeKick();
+    bool isLeveling();
   private:
-    double right;
-    double left;
+    int right;
+    int left;
 
     FuzzyEngine* engine;
     FuzzyGyro* gyro;
 
-    unsigned long times[5];
-    float angles[5];
-    void shiftAngles();
+    void react();
+    int pitchDifference;
+    int previousPitch;
+    int currentPitch;
+    int iteration;
+    int step;
+    bool side;
 };
 
 #endif

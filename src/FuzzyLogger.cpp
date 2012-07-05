@@ -7,7 +7,7 @@ FuzzyLogger::FuzzyLogger() {
 
 void FuzzyLogger::start(unsigned int secs) {
   working = true;
-  timeout = millis() + secs * 1000;
+  timeout = millis() + (long)secs * 1000L;
 }
 
 void FuzzyLogger::stop() {

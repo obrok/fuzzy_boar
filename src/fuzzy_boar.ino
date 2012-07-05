@@ -13,9 +13,12 @@
 #define PIN_RIGHT_ENGINE 6
 
 #define VAR_IDX_SETUP 0
-#define VAR_IDX_LEFT_ENGINE 1
-#define VAR_IDX_RIGHT_ENGINE 2
-#define VAR_IDX_K 3
+#define VAR_IDX_SAFEWORD 1
+#define VAR_IDX_LOOP_DELAY 2
+#define VAR_IDX_FRONT_ENGINE 3
+#define VAR_IDX_BACK_ENGINE 4
+#define VAR_IDX_LEFT_ENGINE 5
+#define VAR_IDX_RIGHT_ENGINE 6
 
 void notify(int times) {
   for (int i = 0; i < times; i++) {
@@ -30,14 +33,18 @@ FuzzyCom com;
 FuzzyEngine engine(PIN_FRONT_ENGINE, PIN_BACK_ENGINE, PIN_LEFT_ENGINE, PIN_RIGHT_ENGINE);
 FuzzyGyro gyro;
 FuzzyLogger logger;
-FuzzyController controller(&engine, &gyro);
+FuzzyController controller;
 
 void setup() {
+  com.set(VAR_IDX_LOOP_DELAY, 0);
+  com.set(VAR_IDX_SAFEWORD, 1);
+  pinMode(PIN_LED, OUTPUT);
+
   Serial.begin(115200);
   Wire.begin();
 
-  pinMode(PIN_LED, OUTPUT);
-
+  gyro.setup();
+  engine.setup(1000, 2000);
   notify(3);
 
   while (com.get(VAR_IDX_SETUP) == 0) {
@@ -49,20 +56,32 @@ void setup() {
     }
   }
 
-  com.set(VAR_IDX_K, 25);
+  if (com.get(VAR_IDX_SETUP) == 2) {
+    engine.setAll(1000);
+  }
+
+  while (com.get(VAR_IDX_SETUP) == 2) {
+    if (Serial.available() > 0) {
+      com.read();
+      if (com.hasMessage()) {
+        Serial.println(com.getResponse());
+      }
+    }
+  }
+
   notify(4);
 
-  engine.setup(1200, 1800);
-  gyro.setup();
+  controller.setup(&engine, &gyro);
   notify(5);
+  engine.setLeft(1500);
+  engine.setRight(1500);
 }
 
 void loop() {
-  logger.log("loop", "Starting loop");
+  return;
   if (logger.isAfterTimeout()) {
     logger.stop();
   }
-
   if (Serial.available() > 0) {
     com.read();
     if (com.hasMessage()) {
@@ -75,13 +94,12 @@ void loop() {
     }
   }
 
-  int left = com.get(VAR_IDX_LEFT_ENGINE);
-  engine.setLeft(left / 100.0);
+  delay(com.get(VAR_IDX_LOOP_DELAY));
 
-  int right = com.get(VAR_IDX_RIGHT_ENGINE);
-  engine.setRight(right / 100.0);
+  if (com.get(VAR_IDX_SAFEWORD) == 0) {
+    controller.stop();
+    return;
+  }
 
-  gyro.update();
   controller.update();
-  logger.log("gyro", "yaw %d pitch %d roll %d", (int)(gyro.getYaw() * 180 / M_PI), (int)(gyro.getPitch() * 180 / M_PI), (int)(gyro.getRoll() * 180 / M_PI));
 }

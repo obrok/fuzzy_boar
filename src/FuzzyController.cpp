@@ -2,39 +2,101 @@
 
 extern FuzzyLogger logger;
 
-FuzzyController::FuzzyController(FuzzyEngine* _engine, FuzzyGyro* _gyro) {
-  engine = engine;
-  gyro = gyro;
+FuzzyController::FuzzyController() {
+}
 
-  left = 1400;
-  right = 1400;
+void FuzzyController::setup(FuzzyEngine* _engine, FuzzyGyro* _gyro) {
+  engine = _engine;
+  gyro = _gyro;
+  previousPitch = 0;
+  currentPitch = 0;
+  pitchDifference = 0;
+  iteration = 0;
+  step = 0;
+  side = true;
 }
 
 void FuzzyController::update() {
-  shiftAngles();
+  gyro -> update();
+  currentPitch = (int)(gyro -> getPitch() * 180 / M_PI);
+  pitchDifference = currentPitch - previousPitch;
 
-  float angle = angles[0];
-  float speed = (angles[4] - angles[0]) / (float)(times[4] - times[0]) * 1000;
-  float desiredSpeed = constrain(-angle, -10, 10);
-
-  if (speed < desiredSpeed) {
-    left -= 10;
-    right += 10;
+  if (iteration == 0) {
+    react();
+    iteration = 0;
   } else {
-    left += 10;
-    right -= 10;
+    iteration++;
   }
+  logger.log("engine", "cp: %3d, pp: %3d, pd: %3d, le: %4d, ri: %4d", currentPitch, previousPitch, pitchDifference, engine->getLeft(), engine->getRight());
 
-  engine->setRight(right);
-  engine->setLeft(left);
+  previousPitch = currentPitch;
 }
 
-void FuzzyController::shiftAngles() {
-  for (int i = 0; i < 3; i++) {
-    angles[i + 1] = angles[i];
-    times[i + 1] = times[i];
+void FuzzyController::react() {
+  if (!isEven()) {
+    if (!isLeveling()) {
+      initializeKick();
+    } else {
+      easeKick();
+    }
   }
+}
 
-  times[0] = millis();
-  angles[0] = gyro->getPitch();
+bool FuzzyController::isLeveling() {
+  if (isRightLower()) {
+    return hasRightRisen();
+  } else {
+    return hasLeftRisen();
+  }
+}
+
+void FuzzyController::initializeKick() {
+  step = abs(currentPitch * 3);
+  logger.log("engine", "############################### %d", step);
+  if (isRightLower()) {
+    engine->changeRight(step);
+    engine->changeLeft(-step);
+  } else {
+    engine->changeRight(-step);
+    engine->changeLeft(step);
+  }
+}
+
+void FuzzyController::easeKick() {
+  step = step / 2;
+  if (isRightLower()) {
+    engine->changeRight(-step);
+    engine->changeLeft(step);
+  } else {
+    engine->changeRight(step);
+    engine->changeLeft(-step);
+  }
+}
+
+void FuzzyController::stop() {
+  engine -> stop();
+}
+
+bool FuzzyController::isRightLower() {
+  return currentPitch > 0;
+}
+
+bool FuzzyController::isEven() {
+  return currentPitch == 0;
+}
+
+bool FuzzyController::hasRightRisen() {
+  return pitchDifference < 0;
+}
+
+bool FuzzyController::hasLeftRisen() {
+  return pitchDifference > 0;
+}
+
+bool FuzzyController::hasSwitchedSide() {
+  return previousPitch * currentPitch <= 0;
+}
+
+bool FuzzyController::changedSideSinceLastKick() {
+  side != isRightLower();
 }
