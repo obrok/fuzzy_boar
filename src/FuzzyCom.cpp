@@ -82,8 +82,22 @@ void FuzzyCom::parseMessage() {
     parseSet(tokens, total);
   } else if (strcmp(tokens[0], "get") == 0) {
     parseGet(tokens, total);
+  } else if (strcmp(tokens[0], "log") == 0) {
+    parseLog(tokens, total);
   } else {
     setResponse("Command unknown");
+  }
+}
+
+void FuzzyCom::parseLog(char **tokens, int size) {
+  if (size == 2) {
+    logger.setTopic(tokens[1]);
+    setResponse("Scoping logs");
+  } else if (size == 1) {
+    logger.setAllTopics();
+    setResponse("Showing all logs");
+  } else {
+    setResponse("Invalid log command");
   }
 }
 

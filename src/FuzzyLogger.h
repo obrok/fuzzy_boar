@@ -7,10 +7,12 @@ class FuzzyLogger {
   public:
     FuzzyLogger();
     void log(char *topic, char *fmt, ...);
+    void setTopic(char *topic);
+    void setAllTopics();
 
   private:
-    bool working;
-    unsigned long timeout;
+    char logTopic[32];
+    bool showAllTopics;
 };
 
 #endif

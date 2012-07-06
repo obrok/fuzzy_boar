@@ -25,6 +25,7 @@ class FuzzyCom {
     int variables[64];
     void parseSet(char **tokens, int size);
     void parseGet(char **tokens, int size);
+    void parseLog(char **tokens, int size);
 };
 
 #endif
