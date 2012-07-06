@@ -48,11 +48,8 @@ void setup() {
   notify(3);
 
   while (com.get(VAR_IDX_SETUP) == 0) {
-    if (Serial.available() > 0) {
-      com.read();
-      if (com.hasMessage()) {
-        Serial.println(com.getResponse());
-      }
+    if (com.update()) {
+      Serial.println(com.getResponse());
     }
   }
 
@@ -61,11 +58,8 @@ void setup() {
   }
 
   while (com.get(VAR_IDX_SETUP) == 2) {
-    if (Serial.available() > 0) {
-      com.read();
-      if (com.hasMessage()) {
-        Serial.println(com.getResponse());
-      }
+    if (com.update()) {
+      Serial.println(com.getResponse());
     }
   }
 
@@ -82,15 +76,14 @@ void loop() {
   if (logger.isAfterTimeout()) {
     logger.stop();
   }
-  if (Serial.available() > 0) {
-    com.read();
-    if (com.hasMessage()) {
-      char *request = com.getRequest();
-      if (request[0] == 'l' && request[1] == 'o' && request[2] == 'g') {
-        logger.start(atoi(request + 4));
-      } else {
-        Serial.println(com.getResponse());
-      }
+
+
+  if (com.update()) {
+    char *request = com.getRequest();
+    if (request[0] == 'l' && request[1] == 'o' && request[2] == 'g') {
+      logger.start(atoi(request + 4));
+    } else {
+      Serial.println(com.getResponse());
     }
   }
 

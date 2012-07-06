@@ -130,3 +130,12 @@ int FuzzyCom::set(int var, int val) {
 char *FuzzyCom::getRequest() {
   return buffer;
 }
+
+int FuzzyCom::update() {
+  if (Serial.available() > 0) {
+    read();
+    return hasMessage();
+  } else {
+    return false;
+  }
+}

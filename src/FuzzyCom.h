@@ -10,6 +10,7 @@ class FuzzyCom {
     bool hasMessage();
     int get(int var);
     int set(int var, int val);
+    int update();
 
   private:
     bool messageReceived;
