@@ -6,10 +6,6 @@
 class FuzzyLogger {
   public:
     FuzzyLogger();
-    void start(unsigned int secs);
-    void stop();
-    bool isAfterTimeout();
-    void log(char *msg);
     void log(char *topic, char *fmt, ...);
 
   private:

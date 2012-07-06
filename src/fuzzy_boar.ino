@@ -47,22 +47,12 @@ void setup() {
   engine.setup(1000, 2000);
   notify(3);
 
+  logger.log("setup", "Please confirm start");
   while (com.get(VAR_IDX_SETUP) == 0) {
-    if (com.update()) {
-      Serial.println(com.getResponse());
-    }
+    com.update();
   }
 
-  if (com.get(VAR_IDX_SETUP) == 2) {
-    engine.setAll(1000);
-  }
-
-  while (com.get(VAR_IDX_SETUP) == 2) {
-    if (com.update()) {
-      Serial.println(com.getResponse());
-    }
-  }
-
+  logger.log("setup", "Starting");
   notify(4);
 
   controller -> setup(&engine, &gyro);
@@ -72,22 +62,7 @@ void setup() {
 }
 
 void loop() {
-  return;
-  if (logger.isAfterTimeout()) {
-    logger.stop();
-  }
-
-
-  if (com.update()) {
-    char *request = com.getRequest();
-    if (request[0] == 'l' && request[1] == 'o' && request[2] == 'g') {
-      logger.start(atoi(request + 4));
-    } else {
-      Serial.println(com.getResponse());
-    }
-  }
-
-  delay(com.get(VAR_IDX_LOOP_DELAY));
+  com.update();
 
   if (com.get(VAR_IDX_SAFEWORD) == 0) {
     controller -> stop();

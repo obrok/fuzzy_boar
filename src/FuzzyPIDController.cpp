@@ -3,5 +3,5 @@
 extern FuzzyLogger logger;
 
 void FuzzyPIDController::react() {
-  logger.log("pid", "reacting");
+  logger.log("controller", "pitch: %d, diff: %d", currentPitch, pitchDifference);
 }

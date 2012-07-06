@@ -1,5 +1,62 @@
 require "serialport"
 require "timeout"
+require "io/wait"
+
+class FuzzyWindow
+  def initialize(output, in_height, out_height, header = "")
+    @output = output
+    @in_height = in_height
+    @out_height = out_height
+    @input_lines = Array.new(@in_height, "")
+    @output_lines = Array.new(@out_height, "")
+    @header = header
+  end
+
+  def reputs(str = '')
+    @output.puts "\e[0K" + str
+  end
+
+  def clear_screen!
+    @output.print "\e[2J"
+  end
+
+  def move_to_home!
+    @output.print "\e[H"
+  end
+
+  def flush!
+    @output.flush
+  end
+
+  def tick(in_line, out_line)
+    if in_line
+      @input_lines.unshift(in_line)
+      @input_lines.pop
+    end
+    if out_line
+      @output_lines.unshift(out_line)
+      @output_lines.pop
+    end
+    draw
+  end
+
+  def draw
+    clear_screen!
+    move_to_home!
+
+    reputs @header
+    reputs "=" * 80
+    @input_lines.each do |line|
+      reputs line
+    end
+    reputs "=" * 80
+    @output_lines.each do |line|
+      reputs line
+    end
+    reputs "=" * 80
+    flush!
+  end
+end
 
 class FuzzyCom
   def initialize(port)
@@ -13,6 +70,10 @@ class FuzzyCom
   def put(msg)
     packed = pack_message(msg)
     @serial_port.write(packed)
+  end
+
+  def ready?
+    @serial_port.ready?
   end
 
   def get
@@ -30,23 +91,16 @@ if __FILE__ == $0
   modems = Dir["/dev/tty.usb*"]
   modem = modems[0]
   com = FuzzyCom.new(modem)
-  while true do
-    print "< "
-    command = gets.to_s.chomp.split(" ")
-    case command[0]
-    when "quit"
-      exit(0)
-    when "log"
-      com.put(command.join(" "))
-      while true
-        msg = com.get
-        break if msg == "endlog"
-        puts "> #{msg}"
-      end
-    else
-      com.put(command.join(" "))
-      msg = com.get
-      puts "> #{msg}"
+  view = FuzzyWindow.new(STDOUT, 3, 40, "Connected to #{modem}")
+  while true
+    in_line = out_line = nil
+    if STDIN.ready?
+      in_line = STDIN.gets.chomp
+      com.put(in_line)
     end
+    out_line = com.get if com.ready?
+    view.tick(in_line, out_line)
+    sleep 0.01
   end
 end
+

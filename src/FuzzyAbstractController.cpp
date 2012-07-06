@@ -23,8 +23,12 @@ void FuzzyAbstractController::update() {
   pitchDifference = currentPitch - previousPitch;
   if (now - lastReactionMillis >= reactInterval) {
     react();
+    lastReactionMillis = now;
   }
 
-  lastReactionMillis = now;
   previousPitch = currentPitch;
+}
+
+void FuzzyAbstractController::stop() {
+  engine -> stop();
 }

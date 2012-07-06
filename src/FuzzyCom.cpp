@@ -22,6 +22,7 @@ void FuzzyCom::read() {
   if (buffer[currentPos] == '\0') {
     currentPos = 0;
     parseMessage();
+    logger.log("com", getResponse());
     messageReceived = true;
   } else {
     currentPos++;

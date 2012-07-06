@@ -9,5 +9,8 @@ upload: build
 setup:
 	cd lib/BinaryMuse-ino-f2cd9e0 && python setup.py install
 
+test:
+	all
+
 clean:
 	ino clean
