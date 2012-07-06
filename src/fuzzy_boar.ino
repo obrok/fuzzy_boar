@@ -4,7 +4,7 @@
 #include "FuzzyEngine.h"
 #include "FuzzyLogger.h"
 #include "FuzzyGyro.h"
-#include "FuzzyController.h"
+#include "FuzzyPIDController.h"
 
 #define PIN_LED 13
 #define PIN_FRONT_ENGINE 3
@@ -33,7 +33,7 @@ FuzzyCom com;
 FuzzyEngine engine(PIN_FRONT_ENGINE, PIN_BACK_ENGINE, PIN_LEFT_ENGINE, PIN_RIGHT_ENGINE);
 FuzzyGyro gyro;
 FuzzyLogger logger;
-FuzzyController controller;
+FuzzyAbstractController *controller = new FuzzyPIDController();
 
 void setup() {
   com.set(VAR_IDX_LOOP_DELAY, 0);
@@ -71,7 +71,7 @@ void setup() {
 
   notify(4);
 
-  controller.setup(&engine, &gyro);
+  controller -> setup(&engine, &gyro);
   notify(5);
   engine.setLeft(1500);
   engine.setRight(1500);
@@ -97,9 +97,9 @@ void loop() {
   delay(com.get(VAR_IDX_LOOP_DELAY));
 
   if (com.get(VAR_IDX_SAFEWORD) == 0) {
-    controller.stop();
+    controller -> stop();
     return;
   }
 
-  controller.update();
+  controller -> update();
 }
