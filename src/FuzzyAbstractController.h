@@ -18,6 +18,8 @@ class FuzzyAbstractController {
     int pitchDifference;
     int previousPitch;
     int currentPitch;
+    long lastReactionMillis;
+    int reactInterval;
 };
 
 #endif
