@@ -11,6 +11,6 @@ void FuzzyLogger::log(char *topic, char *fmt, ...) {
   va_start(args, fmt);
   vsnprintf(tmp, 256, fmt, args);
   va_end(args);
-  sprintf(logMsg, "[%ld][%s] %s", millis(), topic, tmp);
+  sprintf(logMsg, "[%5ld][%s] %s", millis(), topic, tmp);
   Serial.println(logMsg);
 }

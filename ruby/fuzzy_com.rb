@@ -80,6 +80,16 @@ class FuzzyCom
     @serial_port.gets.chomp
   end
 
+  def clear!
+    Timeout.timeout(1) do
+      while true
+        com.get rescue nil
+      end
+    end
+  rescue
+    # noop
+  end
+
   private
   def pack_message(msg)
     length = "fcom".size + 1 + msg.size + 1
@@ -91,6 +101,7 @@ if __FILE__ == $0
   modems = Dir["/dev/tty.usb*"]
   modem = modems[0]
   com = FuzzyCom.new(modem)
+  com.clear!
   view = FuzzyWindow.new(STDOUT, 3, 40, "Connected to #{modem}")
   while true
     in_line = out_line = nil
