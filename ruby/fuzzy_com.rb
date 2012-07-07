@@ -111,7 +111,7 @@ if __FILE__ == $0
     end
     out_line = com.get if com.ready?
     view.tick(in_line, out_line)
-    sleep 0.01
+    sleep 0.03
   end
 end
 

@@ -4,7 +4,13 @@
 #include "FuzzyAbstractController.h"
 
 class FuzzyPIDController : public FuzzyAbstractController {
-  void react();
+  public:
+    void react();
+    void setup(FuzzyEngine* _engine, FuzzyGyro* _gyro);
+
+  protected:
+    double errorSum, lastError;
+    double kp, ki, kd;
 };
 
 #endif

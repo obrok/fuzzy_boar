@@ -12,14 +12,14 @@ void FuzzyAbstractController::setup(FuzzyEngine* _engine, FuzzyGyro* _gyro) {
   currentPitch = 0;
   pitchDifference = 0;
   lastReactionMillis = 0;
-  reactInterval = 100; //ms
+  reactInterval = 0; //ms
 }
 
 void FuzzyAbstractController::update() {
   unsigned long now = millis();
 
   gyro -> update();
-  currentPitch = (int)(gyro -> getPitch() * 180 / M_PI);
+  currentPitch = (int)(gyro -> getPitch() * 1800 / M_PI);
   pitchDifference = currentPitch - previousPitch;
   if (now - lastReactionMillis >= reactInterval) {
     react();
@@ -31,4 +31,9 @@ void FuzzyAbstractController::update() {
 
 void FuzzyAbstractController::stop() {
   engine -> stop();
+}
+
+void FuzzyAbstractController::setReactionInterval(unsigned int interval) {
+  logger.log("ctrl", "Setting reaction interval %d", interval);
+  reactInterval = interval;
 }

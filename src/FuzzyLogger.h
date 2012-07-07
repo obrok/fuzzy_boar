@@ -11,7 +11,7 @@ class FuzzyLogger {
     void setAllTopics();
 
   private:
-    char logTopic[32];
+    char logTopic[255];
     bool showAllTopics;
 };
 

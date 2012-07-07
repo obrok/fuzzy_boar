@@ -15,6 +15,8 @@ class FuzzyAbstractController {
     int pitchDifference;
     int previousPitch;
     int currentPitch;
+    void setReactionInterval(unsigned int interval);
+    unsigned int reactInterval;
 
   private:
     virtual void react() = 0;
@@ -22,7 +24,6 @@ class FuzzyAbstractController {
     FuzzyEngine* engine;
     FuzzyGyro* gyro;
     long lastReactionMillis;
-    int reactInterval;
 };
 
 #endif

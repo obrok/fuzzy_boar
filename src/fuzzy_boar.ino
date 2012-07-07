@@ -33,7 +33,7 @@ FuzzyCom com;
 FuzzyEngine engine(PIN_FRONT_ENGINE, PIN_BACK_ENGINE, PIN_LEFT_ENGINE, PIN_RIGHT_ENGINE);
 FuzzyGyro gyro;
 FuzzyLogger logger;
-FuzzyAbstractController *controller = new FuzzyPIDController();
+FuzzyPIDController controller;
 
 void setup() {
   com.set(VAR_IDX_LOOP_DELAY, 0);
@@ -55,7 +55,7 @@ void setup() {
   logger.log("setup", "Starting");
   notify(4);
 
-  controller -> setup(&engine, &gyro);
+  controller.setup(&engine, &gyro);
   notify(5);
   engine.setLeft(1500);
   engine.setRight(1500);
@@ -65,9 +65,9 @@ void loop() {
   com.update();
 
   if (com.get(VAR_IDX_SAFEWORD) == 0) {
-    controller -> stop();
+    controller.stop();
     return;
   }
 
-  controller -> update();
+  controller.update();
 }

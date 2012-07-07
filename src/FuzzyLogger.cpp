@@ -6,6 +6,7 @@ FuzzyLogger::FuzzyLogger() {
 
 void FuzzyLogger::setTopic(char *topic) {
   showAllTopics = false;
+  log("com", "Setting topic to %s", topic);
   strcpy(logTopic, topic);
 }
 

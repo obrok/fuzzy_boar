@@ -19,7 +19,7 @@ void FuzzyCom::read() {
     clearBuffer();
   }
   buffer[currentPos] = Serial.read();
-  if (buffer[currentPos] == '\0') {
+  if (buffer[currentPos] == '\n') {
     currentPos = 0;
     parseMessage();
     logger.log("com", getResponse());
@@ -48,7 +48,7 @@ bool FuzzyCom::isValidHeader() {
 void FuzzyCom::parseMessage() {
   int messageLength;
 
-  if (!isValidHeader()) {
+  /*if (!isValidHeader()) {
     setResponse("Header mismatch");
     return;
   }
@@ -64,18 +64,19 @@ void FuzzyCom::parseMessage() {
     return;
   }
 
-  char bufcopy[255];
   strcpy(bufcopy, buffer + 5);
-  strcpy(buffer, bufcopy);
+  */
+  char bufcopy[255];
+  strcpy(bufcopy, buffer);
 
   char *tokens[10];
   char *token;
   int total = 0;
-  token = strtok(bufcopy, " ");
+  token = strtok(bufcopy, " \n");
   while (token != NULL) {
     tokens[total] = token;
     total++;
-    token = strtok(NULL, " ");
+    token = strtok(NULL, " \n");
   }
 
   if (strcmp(tokens[0], "set") == 0) {
