@@ -5,20 +5,13 @@
 #include "FuzzyLogger.h"
 #include "FuzzyGyro.h"
 #include "FuzzyPIDController.h"
+#include "Indexes.h"
 
 #define PIN_LED 13
 #define PIN_FRONT_ENGINE 3
 #define PIN_BACK_ENGINE 4
 #define PIN_LEFT_ENGINE 5
 #define PIN_RIGHT_ENGINE 6
-
-#define VAR_IDX_SETUP 0
-#define VAR_IDX_SAFEWORD 1
-#define VAR_IDX_LOOP_DELAY 2
-#define VAR_IDX_FRONT_ENGINE 3
-#define VAR_IDX_BACK_ENGINE 4
-#define VAR_IDX_LEFT_ENGINE 5
-#define VAR_IDX_RIGHT_ENGINE 6
 
 void notify(int times) {
   for (int i = 0; i < times; i++) {
@@ -38,6 +31,9 @@ FuzzyPIDController controller;
 void setup() {
   com.set(VAR_IDX_LOOP_DELAY, 0);
   com.set(VAR_IDX_SAFEWORD, 1);
+  com.set(VAR_IDX_KP, 100);
+  com.set(VAR_IDX_KI, 0);
+  com.set(VAR_IDX_KD, 0);
   pinMode(PIN_LED, OUTPUT);
 
   Serial.begin(115200);
@@ -45,20 +41,17 @@ void setup() {
 
   gyro.setup();
   engine.setup(1000, 2000);
+  controller.setup(&engine, &gyro, &com);
   notify(3);
 
-  logger.log("setup", "Please confirm start");
+  engine.setAll(1000);
+  logger.log("setup", "Throttle down, set 0 1 to start");
   while (com.get(VAR_IDX_SETUP) == 0) {
     com.update();
   }
-
-  logger.log("setup", "Starting");
-  notify(4);
-
-  controller.setup(&engine, &gyro);
-  notify(5);
-  engine.setLeft(1500);
-  engine.setRight(1500);
+  delay(3000);
+  notify(2);
+  delay(1000);
 }
 
 void loop() {

@@ -1,0 +1,10 @@
+#define VAR_IDX_SETUP 0
+#define VAR_IDX_SAFEWORD 1
+#define VAR_IDX_LOOP_DELAY 2
+#define VAR_IDX_FRONT_ENGINE 3
+#define VAR_IDX_BACK_ENGINE 4
+#define VAR_IDX_LEFT_ENGINE 5
+#define VAR_IDX_RIGHT_ENGINE 6
+#define VAR_IDX_KP 7
+#define VAR_IDX_KI 8
+#define VAR_IDX_KD 9

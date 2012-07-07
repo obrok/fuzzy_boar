@@ -7,7 +7,7 @@ extern FuzzyLogger logger;
 FuzzyCom::FuzzyCom() {
   currentPos = 0;
   clearBuffer();
-  for (int i = 0; i < 64; i++) {
+  for (int i = 0; i < 32; i++) {
     variables[i] = 0;
   }
   setResponse("No messages yet");

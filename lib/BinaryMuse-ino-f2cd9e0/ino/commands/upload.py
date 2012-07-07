@@ -43,7 +43,7 @@ class Upload(Command):
         else:
             self.e.find_arduino_tool('avrdude', ['hardware', 'tools', 'avr', 'bin'])
             self.e.find_arduino_file('avrdude.conf', ['hardware', 'tools', 'avr', 'etc'])
-    
+
     def run(self, args):
         self.discover()
         port = args.serial_port or self.e.guess_serial_port()

@@ -22,7 +22,7 @@ class FuzzyCom {
     char response[255];
     void clearBuffer();
     void emptySerial();
-    int variables[64];
+    int variables[32];
     void parseSet(char **tokens, int size);
     void parseGet(char **tokens, int size);
     void parseLog(char **tokens, int size);

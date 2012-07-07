@@ -80,7 +80,7 @@ double FuzzyEngine::setSpeed(Servo *engine, double speed, int *speedContainer) {
 }
 
 int FuzzyEngine::setSpeed(Servo *engine, int speed, int *speedContainer) {
-  speed = constrain(speed, low, high);
+  speed = constrain(speed, low, 1300);
   *speedContainer = speed;
   engine -> writeMicroseconds(speed);
   return speed;

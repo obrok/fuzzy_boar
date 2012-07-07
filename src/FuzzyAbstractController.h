@@ -12,6 +12,8 @@ class FuzzyAbstractController {
     void stop();
 
   protected:
+    FuzzyEngine* engine;
+    FuzzyGyro* gyro;
     int pitchDifference;
     int previousPitch;
     int currentPitch;
@@ -21,8 +23,6 @@ class FuzzyAbstractController {
   private:
     virtual void react() = 0;
 
-    FuzzyEngine* engine;
-    FuzzyGyro* gyro;
     long lastReactionMillis;
 };
 
