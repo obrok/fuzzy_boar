@@ -14,3 +14,7 @@ test:
 
 clean:
 	ino clean
+
+swing:
+	gcc -Wall --pedantic -shared -fpic src/calculate_engines.c -o ruby/libquadcopter.so
+	LD_LIBRARY_PATH=/home/vagrant/arduino/fuzzy_boar/ruby/ ruby ruby/swing.rb

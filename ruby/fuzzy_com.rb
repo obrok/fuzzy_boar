@@ -98,7 +98,7 @@ class FuzzyCom
 end
 
 if __FILE__ == $0
-  modems = Dir["/dev/tty.usb*"]
+  modems = Dir["/dev/ttyUSB*"]
   modem = modems[0]
   com = FuzzyCom.new(modem)
   com.clear!
