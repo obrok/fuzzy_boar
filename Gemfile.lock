@@ -1,0 +1,12 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    ffi (1.9.3)
+    serialport (1.3.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  ffi
+  serialport
